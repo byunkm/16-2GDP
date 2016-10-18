@@ -4,14 +4,13 @@ import os
 from pico2d import *
 
 import game_framework
-import title_state
 import subtitle
 
 name = "MainState"
-
-global x, y, z
+global x, y, z, count
+count = 0
 enemy = None
-grass = None
+castle = None
 pause = None
 back = None
 font = None
@@ -21,7 +20,7 @@ towerset = None
 towerimage = None
 
 
-class Grass:
+class Castle:
 
     def __init__(self):
         self.image = load_image('castle.png')
@@ -47,22 +46,25 @@ class Towerimage:
 
 
 class Tower:
+#클래스 변수선언
+    image = None
     global x, y, z
     x = 0
     y = 0
     z = 0
 
+#def 클래스함수(매서드) 생성
+#init 은 생성자
     def __init__(self):
-        self.x, self.y = 60, 100
-        self.image = load_image('tower.png')
-
-    def update(self):
-        self.x = x
-        self.y = y
+        self.state = False
+        self.count = 0
+        self.x, self.y = 60,100
+        if Tower.image == None:
+             Tower.image = load_image('tower.png')
 
     def draw(self):
-        self.image.draw(self.x, self.y)
-
+        if self.state == True:
+             self.image.draw(self.x, self.y)
 
 class Enemy:
     def __init__(self):
@@ -100,11 +102,11 @@ class Back:
 
 
 def enter():
-    global enemy, grass, pause, back, tower, towerui, towerimage
-
+    global enemy, castle, pause, back, tower, towerui, towerimage, towerset
     enemy = Enemy()
-    grass = Grass()
-    tower = Tower()
+    castle = Castle()
+
+    towerset = [Tower() for i in range(15)]
     towerimage = Towerimage()
     towerui = Towerui()
     pause = Pause()
@@ -113,18 +115,10 @@ def enter():
 
 
 def exit():
-    global enemy, grass, pause, back, tower,towerui, towerimage
-
-    enemy = Enemy()
-    grass = Grass()
-    tower = Tower()
-    towerimage = Towerimage()
-    towerui = Towerui()
-    pause = Pause()
-    back = Back()
+    global enemy, castle, pause, back, tower,towerui, towerimage
 
     del enemy
-    del grass
+    del castle
     del pause
     del back
     del tower
@@ -133,10 +127,6 @@ def exit():
 
 
 def pause():
-    global x, y
-    x = 400
-    y = 400
-    pause.draw()
 
     pass
 
@@ -146,7 +136,7 @@ def resume():
 
 
 def handle_events():
-    global x, y, z
+    global x, y, z, castle, towerset, count
 
     events = get_events()
     for event in events:
@@ -158,7 +148,6 @@ def handle_events():
             if 710 < event.x < 750:
                 if 800 - event.y > 750:
                     game_framework.change_state(subtitle)
-                    event.x,event.y == x,y
 
             if 750 < event.x < 800:
                 if 800 - event.y > 750:
@@ -166,28 +155,32 @@ def handle_events():
 
             if 50 < event.x < 115:
                 if 70 < 800-event.y < 130:
-                     z += 1
-
-        if event.type == SDL_MOUSEBUTTONUP and event.button == SDL_BUTTON_LEFT:
-
-            if z >= 1:
-                x, y = event.x, 800 - event.y
-                tower.draw()
-                z -= 1
+                    towerset[count].state = True
 
         if event.type == SDL_MOUSEMOTION:
-            if z >= 1:
-                x, y = event.x, 800 - event.y
-                tower.draw()
-            if z < 1:
-                x, y != event.x, 800 - event.y
+
+                towerset[count].x, towerset[count].y = event.x, 800 - event.y
+
+        if event.type == SDL_MOUSEBUTTONUP and event.button == SDL_BUTTON_LEFT:
+            if towerset[count].state:
+                if 800-event.y < 300 or 800-event.y > 600:
+                    towerset[count].state = False
+                    towerset[count].x, towerset[count].y = 60, 100
+
+                if 300 < 800-event.y < 600:
+                    count = (count+1) % 15
+                    towerset[count].state = False
+
+        if event.type == SDL_KEYDOWN and event.key == SDLK_F10:
+            exit()
+            pass
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_state(subtitle)
 
 
 def update():
-    tower.update()
+
     enemy.update()
 
     pass
@@ -195,11 +188,13 @@ def update():
 
 def draw():
     clear_canvas()
-    grass.draw()
-    enemy.draw()
+    #객체를 통한 함수호출
+    castle.draw()
+    #enemy.draw()
     towerui.draw()
     towerimage.draw()
-    tower.draw()
+    for tower in towerset:
+        tower.draw()
     pause.draw()
     back.draw()
     update_canvas()
