@@ -7,8 +7,11 @@ import game_framework
 import subtitle
 
 name = "MainState"
-global x, y, z, count
+global x, y, z, count, gamepause
+gamepause = False
+gameexitstate = False
 count = 0
+ingamepause = None
 enemy = None
 castle = None
 pause = None
@@ -45,6 +48,22 @@ class Towerimage:
         self.image.draw(60,100)
 
 
+class Ingamepause:
+    def __init__(self):
+        self.image = load_image('igp.png')
+
+    def draw(self):
+        self.image.draw(400, 400)
+
+
+class Gameexit:
+    def __init__(self):
+        self.image = load_image('gameexit.png')
+
+    def draw(self):
+        self.image.draw(400,400)
+
+
 class Tower:
 #클래스 변수선언
     image = None
@@ -65,6 +84,7 @@ class Tower:
     def draw(self):
         if self.state == True:
              self.image.draw(self.x, self.y)
+
 
 class Enemy:
     def __init__(self):
@@ -102,42 +122,27 @@ class Back:
 
 
 def enter():
-    global enemy, castle, pause, back, tower, towerui, towerimage, towerset
+    global enemy, castle, pause, back, tower, towerui, towerimage, towerset, ingamepause, gameexit
+
     enemy = Enemy()
     castle = Castle()
-
     towerset = [Tower() for i in range(15)]
     towerimage = Towerimage()
     towerui = Towerui()
     pause = Pause()
+    ingamepause = Ingamepause()
+    gameexit = Gameexit()
     back = Back()
+
     pass
 
 
 def exit():
-    global enemy, castle, pause, back, tower,towerui, towerimage
-
-    del enemy
-    del castle
-    del pause
-    del back
-    del tower
-    del towerui
-    del towerimage
-
-
-def pause():
-
-    pass
-
-
-def resume():
     pass
 
 
 def handle_events():
-    global x, y, z, castle, towerset, count
-
+    global x, y, z, castle, towerset, count, gamepause, gameexitstate
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -147,11 +152,26 @@ def handle_events():
 
             if 710 < event.x < 750:
                 if 800 - event.y > 750:
-                    game_framework.change_state(subtitle)
+
+                    if gamepause is False:
+                        gameexitstate = True
+
+            if 220< event.x < 300:
+                if 330 < 800-event.y < 380:
+                    if gameexitstate is True:
+                        game_framework.change_state(subtitle)
+                        gameexitstate = False
+
+            if 510< event.x < 570:
+                if 330 < 800-event.y < 380:
+                    gameexitstate = False
+
+
+
 
             if 750 < event.x < 800:
                 if 800 - event.y > 750:
-                    pause.draw()
+                    gamepause = True
 
             if 50 < event.x < 115:
                 if 70 < 800-event.y < 130:
@@ -172,32 +192,42 @@ def handle_events():
                     towerset[count].state = False
 
         if event.type == SDL_KEYDOWN and event.key == SDLK_F10:
-            exit()
-            pass
+            if gamepause is True:
+                 gamepause = False
+                 pass
 
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_state(subtitle)
+            if gamepause is False:
+                game_framework.change_state(subtitle)
 
 
 def update():
 
-    enemy.update()
+    if gamepause is False:
+        enemy.update()
 
     pass
 
 
 def draw():
-    clear_canvas()
-    #객체를 통한 함수호출
-    castle.draw()
-    #enemy.draw()
-    towerui.draw()
-    towerimage.draw()
-    for tower in towerset:
-        tower.draw()
-    pause.draw()
-    back.draw()
+    if gamepause is False:
+        clear_canvas()
+        #객체를 통한 함수호출
+        castle.draw()
+        enemy.draw()
+        towerui.draw()
+        towerimage.draw()
+        for tower in towerset:
+            tower.draw()
+        pause.draw()
+        back.draw()
+        if gameexitstate is True:
+            gameexit.draw()
+    if gamepause is True:
+        ingamepause.draw()
     update_canvas()
+
+
 
     pass
 
