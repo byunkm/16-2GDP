@@ -88,19 +88,19 @@ class Tower:
 
 class Enemy:
     def __init__(self):
-        self.x, self.y = 0, 90
+        self.x, self.y = 400, 90
         self.frame = 0
-        self.image = load_image('run_animation.png')
+        self.image = load_image('Enemy1_sheet.png')
         self.dir = 1
 
     def update(self):
-        self.frame = (self.frame + 1) % 8
-        self.x += self.dir
-        if self.x >= 800:
+        self.frame = (self.frame + 1) % 4
+        self.y += self.dir
+        if self.y >= 400:
             self.dir = -1
-        elif self.x <= 0:
+        elif self.y <= 0:
             self.dir = 1
-
+        delay(0.02)
     def draw(self):
         self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
 
@@ -136,7 +136,6 @@ def enter():
 
     pass
 
-
 def exit():
     pass
 
@@ -156,13 +155,13 @@ def handle_events():
                     if gamepause is False:
                         gameexitstate = True
 
-            if 220< event.x < 300:
+            if 220 < event.x < 300:
                 if 330 < 800-event.y < 380:
                     if gameexitstate is True:
                         game_framework.change_state(subtitle)
                         gameexitstate = False
 
-            if 510< event.x < 570:
+            if 510 < event.x < 570:
                 if 330 < 800-event.y < 380:
                     gameexitstate = False
 
