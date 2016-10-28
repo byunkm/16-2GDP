@@ -90,19 +90,22 @@ class Enemy:
     def __init__(self):
         self.x, self.y = 400, 90
         self.frame = 0
-        self.image = load_image('Enemy1_sheet.png')
-        self.dir = 1
+        self.state = 0
+        self.image = load_image('red.png')
+        self.dir = 0.25
 
     def update(self):
         self.frame = (self.frame + 1) % 4
         self.y += self.dir
+
+        if self.y <= 0:
+            self.dir = 50
+
         if self.y >= 400:
-            self.dir = -1
-        elif self.y <= 0:
-            self.dir = 1
-        delay(0.02)
+            self.dir = -10
+
     def draw(self):
-        self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
+        self.image.clip_draw(self.frame * 100, self.state * 100, 100, 100, self.x, self.y)
 
 
 class Pause:
@@ -136,8 +139,8 @@ def enter():
 
     pass
 
-def exit():
-    pass
+#def exit():
+   # pass
 
 
 def handle_events():
@@ -165,12 +168,11 @@ def handle_events():
                 if 330 < 800-event.y < 380:
                     gameexitstate = False
 
-
-
-
             if 750 < event.x < 800:
                 if 800 - event.y > 750:
                     gamepause = True
+                    if gameexitstate is True:
+                        gamepause = False
 
             if 50 < event.x < 115:
                 if 70 < 800-event.y < 130:
