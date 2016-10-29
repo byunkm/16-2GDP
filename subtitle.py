@@ -4,11 +4,11 @@ import title_state
 
 from pico2d import *
 
-
 name = "SubState"
 image = None
 select = None
 global x, y
+
 x = 560
 y = 360
 
@@ -21,8 +21,6 @@ class Select():
 
     def draw(self):
         self.image.draw(x,y)
-
-
 
 
 def enter():
@@ -53,9 +51,11 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.push_state(title_state)
+
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                if y <110:
+                if y < 110:
                     game_framework.push_state(title_state)
+
                 else:
                     game_framework.push_state(main_state)
 
@@ -76,19 +76,12 @@ def handle_events():
 
 def draw():
 
-
-
     clear_canvas()
 
-    image.draw(400,400)
+    image.draw(400, 400)
     select.draw()
     update_canvas()
     pass
-
-
-
-
-
 
 
 def update():

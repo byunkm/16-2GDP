@@ -49,15 +49,12 @@ def change_state(state):
     state.enter()
 
 
-
 def push_state(state):
     global stack
     if (len(stack) > 0):
         stack[-1].pause()
     stack.append(state)
     state.enter()
-
-
 
 def pop_state():
     global stack
@@ -87,6 +84,7 @@ def run(start_state):
         stack[-1].handle_events()
         stack[-1].update()
         stack[-1].draw()
+
     # repeatedly delete the top of the stack
     while (len(stack) > 0):
         stack[-1].exit()
