@@ -1,0 +1,29 @@
+Python 3.5.2 (v3.5.2:4def2a2901a5, Jun 25 2016, 22:18:55) [MSC v.1900 64 bit (AMD64)] on win32
+>>> import json
+>>> class Hero:
+...     x=100
+...     y=200
+...     hp=30.0
+... f = open('hero_data.txt','w')
+>>> json.dump([Hero.x , Hero.y, Hero.hp],f)
+>>> f.cose()
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+AttributeError: '_io.TextIOWrapper' object has no attribute 'cose'
+>>> f.close()
+>>> [Hero.x,Hero.y,Hero.hp] = [0,0,0.0]
+>>> hero.x
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+NameError: name 'hero' is not defined
+>>> Hero.x
+0
+>>> f=open('hero_date.txt','r')
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: 'hero_date.txt'
+>>> f=open('hero_data.txt','r')
+>>> [Hero.x, Hero.y, Hero.hp] = json.load(f)
+>>> f.close()
+>>> Hero.x, Hero.y , Hero.hp
+(100, 200, 30.0)
