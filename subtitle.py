@@ -9,13 +9,11 @@ image = None
 select = None
 global x, y
 
-x = 560
-y = 360
-
 
 class Select():
     global x, y
-
+    x = 225
+    y = 550
     def __init__(self):
         self.image = load_image('pointer.png')
 
@@ -27,7 +25,7 @@ def enter():
     global image,select
 
     select = Select()
-    image = load_image('new1.jpg')
+    image = load_image('easy.jpg')
 
     pass
 
@@ -53,23 +51,20 @@ def handle_events():
                 game_framework.push_state(title_state)
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                if y < 110:
-                    game_framework.push_state(title_state)
-
-                else:
+                if x < 230:
                     game_framework.push_state(main_state)
 
-            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN):
-                y -= 130
-                if y<90:
-                    y += 390
-            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_UP):
-                y += 130
-                if y>400:
-                    y -= 390
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
+                x += 170
+                if x > 550:
+                    x=225
 
 
-
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LEFT):
+                x -= 170
+                if x < 225:
+                    x=395
+                pass
 
     pass
 
@@ -94,3 +89,9 @@ def pause():
 
 def resume():
     pass
+
+
+def exit():
+
+    pass
+
