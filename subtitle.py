@@ -1,7 +1,6 @@
 import game_framework
-import main_state
 import title_state
-
+import main_state
 from pico2d import *
 
 name = "SubState"
@@ -40,7 +39,7 @@ def exit():
     pass
 
 
-def handle_events():
+def handle_events(frame_time):
     global x,y
     events = get_events()
     for event in events:
@@ -69,7 +68,7 @@ def handle_events():
     pass
 
 
-def draw():
+def draw(frame_time):
 
     clear_canvas()
 
@@ -79,7 +78,7 @@ def draw():
     pass
 
 
-def update():
+def update(frame_time):
     pass
 
 

@@ -1,5 +1,4 @@
 import game_framework
-import main_state
 import subtitle
 from pico2d import *
 
@@ -10,7 +9,6 @@ select = None
 global x, y
 x = 250
 y = 220
-
 
 class Select():
     global x, y
@@ -37,7 +35,7 @@ def enter():
 
 
 
-def handle_events():
+def handle_events(frame_time):
     global x, y
     events = get_events()
     for event in events:
@@ -57,7 +55,7 @@ def handle_events():
     pass
 
 
-def draw():
+def draw(frame_time):
 
     clear_canvas()
     image.draw(400,400)
@@ -66,7 +64,7 @@ def draw():
     pass
 
 
-def update():
+def update(frame_time):
     pass
 
 
