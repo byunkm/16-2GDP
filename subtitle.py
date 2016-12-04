@@ -3,21 +3,22 @@ import title_state
 import main_state
 from pico2d import *
 
-name = "SubState"
+name = "difficultly Select"
 image = None
 select = None
-global x, y
+global selectpoint, y
 
 
 class Select():
-    global x, y
-    x = 225
+    global selectpoint, y
+    selectpoint = 225
     y = 550
+
     def __init__(self):
         self.image = load_image('pointer.png')
 
     def draw(self):
-        self.image.draw(x,y)
+        self.image.draw(selectpoint, y)
 
 
 def enter():
@@ -29,9 +30,6 @@ def enter():
     pass
 
 
-
-
-
 def exit():
 
     global image
@@ -40,7 +38,7 @@ def exit():
 
 
 def handle_events(frame_time):
-    global x,y
+    global selectpoint ,y
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -50,28 +48,26 @@ def handle_events(frame_time):
                 game_framework.push_state(title_state)
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                if x < 230:
+                if selectpoint < 230:
                     game_framework.push_state(main_state)
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
-                x += 170
-                if x > 550:
-                    x=225
+                selectpoint += 170
+                if selectpoint > 550:
+                    selectpoint=225
 
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LEFT):
-                x -= 170
-                if x < 225:
-                    x=395
+                selectpoint -= 170
+                if selectpoint < 225:
+                    selectpoint=395
                 pass
 
     pass
 
 
 def draw(frame_time):
-
     clear_canvas()
-
     image.draw(400, 400)
     select.draw()
     update_canvas()

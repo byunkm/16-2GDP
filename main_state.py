@@ -5,6 +5,7 @@ from pico2d import *
 
 import game_framework
 import subtitle
+
 from tower import Tower
 from tower import Magictower
 from tower import Cannontower
@@ -135,7 +136,7 @@ def handle_events(frame_time):
         if event.type == SDL_MOUSEMOTION:
             towerset[count].x, towerset[count].y = event.x, 800 - event.y
             magictowers[count].x, magictowers[count].y = event.x, 800 - event.y
-            cannnontowers[count].x, cannnontowers[count].y = event.x , 800-event.y
+            cannnontowers[count].x, cannnontowers[count].y = event.x, 800-event.y
 
 
         if event.type == SDL_MOUSEBUTTONUP and event.button == SDL_BUTTON_LEFT:

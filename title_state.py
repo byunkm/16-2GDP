@@ -2,17 +2,16 @@ import game_framework
 import subtitle
 from pico2d import *
 
-
-name = "TitleState"
+name = "Title"
 image = None
 select = None
-global x, y
+global x, y, entergame
 x = 250
 y = 220
+entergame = 140
+
 
 class Select():
-    global x, y
-
     def __init__(self):
         self.image = load_image('point.png')
 
@@ -31,12 +30,8 @@ def enter():
     pass
 
 
-
-
-
-
 def handle_events(frame_time):
-    global x, y
+
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -46,7 +41,7 @@ def handle_events(frame_time):
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                if y < 140:
+                if y < entergame:
                     game_framework.quit()
                 else:
                     game_framework.push_state(subtitle)
