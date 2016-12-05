@@ -6,24 +6,23 @@ from pico2d import *
 name = "difficultly Select"
 image = None
 select = None
-global selectpoint, y
+global selectpointx, selectpointy, move, easymode
 
+selectpointx = 225
+selectpointy = 550
+move = 170
+easymode = 230
 
 class Select():
-    global selectpoint, y
-    selectpoint = 225
-    y = 550
-
     def __init__(self):
         self.image = load_image('pointer.png')
 
     def draw(self):
-        self.image.draw(selectpoint, y)
+        self.image.draw(selectpointx, selectpointy)
 
 
 def enter():
-    global image,select
-
+    global image, select
     select = Select()
     image = load_image('easy.jpg')
 
@@ -31,15 +30,15 @@ def enter():
 
 
 def exit():
-
     global image
-
     pass
 
 
 def handle_events(frame_time):
-    global selectpoint ,y
     events = get_events()
+    global selectpointx
+    #왜 너만지우면 오류가 생길까?
+
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
@@ -48,19 +47,20 @@ def handle_events(frame_time):
                 game_framework.push_state(title_state)
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                if selectpoint < 230:
+                if selectpointx < easymode:
                     game_framework.push_state(main_state)
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
-                selectpoint += 170
-                if selectpoint > 550:
-                    selectpoint=225
-
+                selectpointx += move
+                if selectpointx > 550:
+                    selectpointx = 225
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LEFT):
-                selectpoint -= 170
-                if selectpoint < 225:
-                    selectpoint=395
+                selectpointx -= move
+                if selectpointx < 225:
+                    selectpointx = 395
+
+
                 pass
 
     pass

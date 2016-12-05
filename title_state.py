@@ -18,9 +18,6 @@ class Select():
     def draw(self):
         self.image.draw(x,y)
 
-
-
-
 def enter():
     global image,select
 
