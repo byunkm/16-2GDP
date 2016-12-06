@@ -3,7 +3,7 @@ from pico2d import*
 
 
 class Anemy:
-    PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+    PIXEL_PER_METER = (20.0 / 0.6)  # 10 pixel 30 cm
     RUN_SPEED_KMPH = 20.0  # Km / Hour
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -23,7 +23,7 @@ class Anemy:
     LEFT_RUN, RIGHT_RUN, LEFT_STAND, RIGHT_STAND = 0, 1, 2, 3
 
     def __init__(self):
-        self.x, self.y = 790,670
+        self.x, self.y = 750,200
         self.frame = random.randint(0, 7)
         self.life_time = 0.0
         self.total_frames = 0.0
