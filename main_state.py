@@ -93,13 +93,14 @@ def update(frame_time):
         an.update(frame_time)
 
     for an in anemy:
-        for i in range (5):
-            for j in range(20):
-             if collide(arrowweapon[i], anemy[j]):
-                 anemy[j].remove(anemy[j])
+        for bn in arrowweapon:
+            if collide(bn, an):
+                anemy.remove(an)
+                bn.x = 300
 
     for bn in arrowweapon:
         bn.update(frame_time)
+
 
 
 
@@ -109,16 +110,17 @@ def update(frame_time):
 def draw(frame_time):
      clear_canvas()
      map.draw()
-     for i in range (20):
-        anemy[i].draw()
-        anemy[i].draw_bb()
+     for an in anemy:
+        an.draw()
+        an.draw_bb()
 
      boss.draw()
      for i in range(5):
       arrowtower[i].draw()
-     for i in range(5):
-      arrowweapon[i].draw(frame_time)
-      arrowweapon[i].draw_bb()
+
+     for bn in arrowweapon:
+        bn.draw(frame_time)
+        bn.draw_bb()
      cannontower.draw()
 
      update_canvas()
