@@ -4,22 +4,37 @@ import os
 from pico2d import *
 import game_framework
 import subtitle
-from anemy import Boss
-from anemy import Anemy
+import game_over
+import game_clear
+from anemy import Boss, Anemy, Level2
 from tower import Tower,Cannontower,Arrowweapon
-global worldmap,count
+name = "MainGameStage"
+global worldmap, count, score, life, bosslife,cannoncount
+global scorefontx, scorefonty ,lifefontx, lifefonty, bosslifefontx, bosslifefonty
+scorefontx = 450
+scorefonty = 770
+lifefontx = 650
+lifefonty = 770
+bosslifefontx=450
+bosslifefonty=720
 count = 0
+cannoncount=0
+score = 0
+worldmap = 400
+life = 20
+bosslife = 20
 
-worldmap =400
-name = "MainState"
+start = False
 map = None
 anemy = None
+level2 = None
 boss = None
 arrowtower = None
 cannontower = None
 arrowweapon = None
 
 
+print(start)
 
 class Map:
     def __init__(self):
@@ -28,16 +43,28 @@ class Map:
     def draw(self):
         self.image.draw(worldmap, worldmap)
 
+    def get_bb(self):
+        return 50, 150, 260, 750
+
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
+
+
+
+
 
 def enter():
-    global map, anemy, boss, arrowtower, cannontower, arrowweapon
+    global map, anemy, boss, arrowtower, cannontower, arrowweapon, level2
     map = Map()
     anemy = [Anemy() for i in range (20)]
+    level2 = [Level2() for i in range (40)]
+
     boss = Boss()
     arrowtower = [Tower() for i in range(5)]
     cannontower = Cannontower()
     arrowweapon = [Arrowweapon() for i in range(5)]
-    pass
+
+
 
 
 def exit():
@@ -57,7 +84,7 @@ def collide (a, b):
 
 
 def handle_events(frame_time):
-    global arrowtower, count
+    global arrowtower, count, start
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -65,14 +92,25 @@ def handle_events(frame_time):
         if event.type == SDL_MOUSEMOTION:
             if arrowtower[count].state == True:
                 arrowtower[count].x, arrowtower[count].y = event.x, 800 - event.y
+            if cannontower.state == True:
+                cannontower.x, cannontower.y = event.x, 800-event.y
             pass
+
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
+            if start == False:
+             start = True
+
 
         if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             if event.x<50 and 800-event.y<50:
                 arrowtower[count].state = True
+            if 200>event.x>100 and 800-event.y<50:
+                    cannontower.state = True
 
         if event.type == SDL_MOUSEBUTTONUP and event.button == SDL_BUTTON_LEFT:
-            if arrowtower[count].state == True :
+            if arrowtower[count].state == True and clamp(250,event.x,300) and 800-event.y>550:
+                #clamp(0, self.x, 1650)
+                arrowtower[count].x, arrowtower[count].y = 280,580
                 arrowtower[count].state = False
                 arrowtower[count].building = True
                 arrowweapon[count].state = True
@@ -83,44 +121,133 @@ def handle_events(frame_time):
                    arrowweapon[count].y = arrowtower[count].y
                 count = (count+1)%5
 
+            if arrowtower[count].state == True and clamp(250,event.x,300) and 550 > 800 - event.y > 450:
+                arrowtower[count].x, arrowtower[count].y = 280, 490
+                arrowtower[count].state = False
+                arrowtower[count].building = True
+                arrowweapon[count].state = True
+                arrowweapon[count].shot = True
+
+                if arrowweapon[count].shot == True:
+                    arrowweapon[count].x = arrowtower[count].x
+                    arrowweapon[count].y = arrowtower[count].y
+                count = (count + 1) % 5
+
+            if arrowtower[count].state == True and clamp(250,event.x,300) and 450>800 - event.y > 350:
+                arrowtower[count].x, arrowtower[count].y = 280, 400
+                arrowtower[count].state = False
+                arrowtower[count].building = True
+                arrowweapon[count].state = True
+                arrowweapon[count].shot = True
+
+                if arrowweapon[count].shot == True:
+                    arrowweapon[count].x = arrowtower[count].x
+                    arrowweapon[count].y = arrowtower[count].y
+                count = (count + 1) % 5
+
+            if cannontower.state == True and clamp(250,event.x,300) and 450>800 - event.y > 350:
+                cannontower.x, cannontower.y = 210, 400
+                cannontower.state = False
+
+
+            if arrowtower[count].state == True and clamp(250,event.x,300) and 350 > 800 - event.y > 250:
+                arrowtower[count].x, arrowtower[count].y = 280, 310
+                arrowtower[count].state = False
+                arrowtower[count].building = True
+                arrowweapon[count].state = True
+                arrowweapon[count].shot = True
+
+                if arrowweapon[count].shot == True:
+                    arrowweapon[count].x = arrowtower[count].x
+                    arrowweapon[count].y = arrowtower[count].y
+                count = (count + 1) % 5
+
+            if arrowtower[count].state == True and clamp(250,event.x,300) and 250 > 800 - event.y > 150:
+                arrowtower[count].x, arrowtower[count].y = 280, 220
+                arrowtower[count].state = False
+                arrowtower[count].building = True
+                arrowweapon[count].state = True
+                arrowweapon[count].shot = True
+
+                if arrowweapon[count].shot == True:
+                    arrowweapon[count].x = arrowtower[count].x
+                    arrowweapon[count].y = arrowtower[count].y
+                count = (count + 1) % 5
 
 
 def update(frame_time):
-    global anemy, arrowweapon
+    global anemy, arrowweapon, score, level2, life, bosslife
 
     boss.update(frame_time)
-    for an in anemy:
-        an.update(frame_time)
+    for level1 in anemy:
+        level1.update(frame_time)
+    for level1 in anemy:
+        for arrow in arrowweapon:
+            if collide(arrow, level1):
+                anemy.remove(level1)
+                arrow.x = 300
+                score = score + 1
+                print(score)
+        if collide(map, level1):
+            anemy.remove(level1)
+            life = life -1
+            print(life)
 
-    for an in anemy:
-        for bn in arrowweapon:
-            if collide(bn, an):
-                anemy.remove(an)
-                bn.x = 300
+    for leveltwo in level2:
+        leveltwo.update(frame_time)
+    for leveltwo in level2:
+        for arrow in arrowweapon:
+            if collide(arrow, leveltwo):
+                level2.remove(leveltwo)
+                arrow.x = 300
+                score = score + 1
+                print(score)
 
-    for bn in arrowweapon:
-        bn.update(frame_time)
+    for arrow in arrowweapon:
+        arrow.update(frame_time)
 
+        if arrow.x >= 800:
+            arrow.x = 300
+        if collide(arrow, boss):
+            arrow.x = 300
+            bosslife -= 1
 
+    if life == 0:
+        game_framework.push_state(game_over)
+    if bosslife <=0:
+        game_framework.push_state(game_clear)
 
-
+    pass
+def pause():
     pass
 
 
 def draw(frame_time):
      clear_canvas()
      map.draw()
-     for an in anemy:
-        an.draw()
-        an.draw_bb()
+     map.draw_bb()
+     for level1 in anemy:
+         level1.draw()
+         level1.draw_bb()
+     for leveltwo in level2:
+         leveltwo.draw()
+         leveltwo.draw_bb()
 
      boss.draw()
+     boss.draw_bb()
      for i in range(5):
       arrowtower[i].draw()
 
-     for bn in arrowweapon:
-        bn.draw(frame_time)
-        bn.draw_bb()
+     for arrow in arrowweapon:
+         arrow.draw(frame_time)
+         arrow.draw_bb()
+
      cannontower.draw()
+
+     font = load_font('ENCR10B.TTF',30)
+     font.draw(lifefontx, lifefonty,'Life:%d'%life)
+     font.draw(scorefontx, scorefonty,'Score:%d'%score)
+     if score==60:
+         font.draw(bosslifefontx,bosslifefonty,'BossLife :%d'%bosslife)
 
      update_canvas()
