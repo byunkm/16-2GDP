@@ -112,19 +112,8 @@ class Level2:
         return self.x - 50, self.y - 50, self.x+50, self.y + 50
 
     def draw_bb(self):
+
         draw_rectangle(*self.get_bb())
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class Boss:
@@ -176,25 +165,6 @@ class Boss:
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
-
-    def handle_event(self, event):
-        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LEFT):
-            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN):
-                self.state = self.LEFT_RUN
-                self.dir = -1
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
-            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.LEFT_RUN):
-                self.state = self.RIGHT_RUN
-                self.dir = 1
-        elif (event.type, event.key) == (SDL_KEYUP, SDLK_LEFT):
-            if self.state in (self.LEFT_RUN,):
-                self.state = self.LEFT_STAND
-                self.dir = 0
-        elif (event.type, event.key) == (SDL_KEYUP, SDLK_RIGHT):
-            if self.state in (self.RIGHT_RUN,):
-                self.state = self.RIGHT_STAND
-                self.dir = 0
-
 
 
 

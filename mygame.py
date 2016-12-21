@@ -14,5 +14,5 @@ from pico2d import *
 ##else:
 ##    os.environ["PYSDL2_DLL_PATH"] = "./SDL2/x64"
 open_canvas(800,800)
-game_framework.run(main_state)
+game_framework.run(start_state)
 close_canvas()

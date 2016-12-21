@@ -7,9 +7,9 @@ import subtitle
 import game_over
 import game_clear
 from anemy import Boss, Anemy, Level2
-from tower import Tower,Cannontower,Arrowweapon
+from tower import Tower,Cannontower,Arrowweapon,Cannonweapon
 name = "MainGameStage"
-global worldmap, count, score, life, bosslife,cannoncount
+global worldmap, count, score, life, bosslife,cannoncount ,bgm
 global scorefontx, scorefonty ,lifefontx, lifefonty, bosslifefontx, bosslifefonty
 scorefontx = 450
 scorefonty = 770
@@ -22,7 +22,7 @@ cannoncount=0
 score = 0
 worldmap = 400
 life = 20
-bosslife = 20
+bosslife = 150
 
 start = False
 map = None
@@ -32,7 +32,7 @@ boss = None
 arrowtower = None
 cannontower = None
 arrowweapon = None
-
+bgm=None
 
 print(start)
 
@@ -54,7 +54,7 @@ class Map:
 
 
 def enter():
-    global map, anemy, boss, arrowtower, cannontower, arrowweapon, level2
+    global bgm,map, anemy, boss, arrowtower, cannontower, arrowweapon, cannonweapon,level2
     map = Map()
     anemy = [Anemy() for i in range (20)]
     level2 = [Level2() for i in range (40)]
@@ -63,8 +63,10 @@ def enter():
     arrowtower = [Tower() for i in range(5)]
     cannontower = Cannontower()
     arrowweapon = [Arrowweapon() for i in range(5)]
-
-
+    cannonweapon = Cannonweapon()
+    ##bgm = load_music('BGM.wav')
+    ##bgm.set_volume(64)
+    ##bgm.repeat_play()
 
 
 def exit():
@@ -89,6 +91,10 @@ def handle_events(frame_time):
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
+        else:
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+                game_framework.quit()
+
         if event.type == SDL_MOUSEMOTION:
             if arrowtower[count].state == True:
                 arrowtower[count].x, arrowtower[count].y = event.x, 800 - event.y
@@ -105,6 +111,7 @@ def handle_events(frame_time):
             if event.x<50 and 800-event.y<50:
                 arrowtower[count].state = True
             if 200>event.x>100 and 800-event.y<50:
+                #if life>=10 and score>=60:
                     cannontower.state = True
 
         if event.type == SDL_MOUSEBUTTONUP and event.button == SDL_BUTTON_LEFT:
@@ -148,6 +155,14 @@ def handle_events(frame_time):
             if cannontower.state == True and clamp(250,event.x,300) and 450>800 - event.y > 350:
                 cannontower.x, cannontower.y = 210, 400
                 cannontower.state = False
+                cannontower.building = True
+                cannonweapon.state = True
+                cannonweapon.shot = True
+
+                if cannonweapon.shot == True:
+                    cannonweapon.x = cannontower.x
+                    cannonweapon.y = cannontower.y
+
 
 
             if arrowtower[count].state == True and clamp(250,event.x,300) and 350 > 800 - event.y > 250:
@@ -211,6 +226,16 @@ def update(frame_time):
         if collide(arrow, boss):
             arrow.x = 300
             bosslife -= 1
+    if cannonweapon.x >=800:
+        cannonweapon.x = 250
+    if collide(cannonweapon, boss):
+            cannonweapon.x = 250
+            bosslife -= 2
+
+
+
+
+    cannonweapon.update(frame_time)
 
     if life == 0:
         game_framework.push_state(game_over)
@@ -225,13 +250,10 @@ def pause():
 def draw(frame_time):
      clear_canvas()
      map.draw()
-     map.draw_bb()
      for level1 in anemy:
          level1.draw()
-         level1.draw_bb()
      for leveltwo in level2:
          leveltwo.draw()
-         leveltwo.draw_bb()
 
      boss.draw()
      boss.draw_bb()
@@ -240,9 +262,9 @@ def draw(frame_time):
 
      for arrow in arrowweapon:
          arrow.draw(frame_time)
-         arrow.draw_bb()
 
      cannontower.draw()
+     cannonweapon.draw(frame_time)
 
      font = load_font('ENCR10B.TTF',30)
      font.draw(lifefontx, lifefonty,'Life:%d'%life)
